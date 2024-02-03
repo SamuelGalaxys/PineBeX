@@ -109,8 +109,6 @@
            
 
 
-
-          
           
         </header>
         <!-- --------------------------------------------------- -->
@@ -122,7 +120,7 @@
             <div class="card-body px-4 py-3">
               <div class="row align-items-center">
                 <div class="col-9">
-                  <h4 class="fw-semibold mb-8">GPT형 문장을 자연스럽게 - Beta</h4>
+                  <h4 class="fw-semibold mb-8">GPT형 문장을 자연스럽게</h4>
                   <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
                       <li class="breadcrumb-item" aria-current="page">생성AI에 의해 생성된 문장을 Pinebe에서 자연스럽게 만들어보세요.</li>
@@ -208,14 +206,14 @@
                   <div class="mb-4 row align-items-center">
                     <div class="col-sm-12">
                       
-                      <div id="typing-effect" style="width: 100%; height: 396px; border: 2px solid rgb(208, 208, 208);border-radius: 6px; overflow: auto;"></div>
+                      <textarea class="form-control" name=""  id="convertedPine"  cols="20" rows="18" placeholder="화성의 지면은 대체로 차가우며, 화성의 대기는..."></textarea>
 
                      </div>
                   </div>
 
                   <div class="row">
                      <div class="col-sm-3">
-                      <BUtton class="btn btn-primary">Copy</BUtton>
+                      <BUtton class="btn btn-primary" id="Copyresult">Copy</BUtton>
                     </div>
                   </div>
                   
@@ -555,114 +553,172 @@
 
 
 
+    <style>
+      .fade {
+        transition: color 0.5s ease-in-out;
+      }
+    </style>
+
 
 
     <script>
- 
-
-
       function startTypingEffect() {
-        var inputSentence = document.getElementById("inputSentence").value;
-        // Replace "입니다" with "이다"
-
-
-
-
-
-
-          // Check if "문서체" is selected in the dropdown
-  
+          var inputSentence = document.getElementById("inputSentence").value;
           var selectElement = document.querySelector('select.form-select');
           var selectedOption = selectElement.options[selectElement.selectedIndex].text;
+      
 
 
-          if (selectedOption === "문서체") {
-
- 
-            inputSentence = inputSentence.replace(/습니다/g, "다")
-      .replace(/입니다/g, "이다").replace(/집니다/g, "진다").replace(/궁금합니다/g, "궁금하다").replace(/유명합니다/g, "유명하다").replace(/됩니다/g, "된다").replace(/입니까/g, "인가").replace(/인가요/g, "인가").replace(/합니다/g, "한다")
-      .replace(/겠지요/g, "겠다").replace(/저는 /g, "나는 ").replace(/듭니다/g, "든다").replace(/저의 /g, "나의 ").replace(/저도 /g, "나도 ").replace(/급니다/g, "크다")
-      .replace(/xxxx/g, "xxxx").replace(/xxxx/g, "xxxx").replace(/xxxx/g, "xxxx").replace(/xxxx/g, "xxxx").replace(/xxxx/g, "xxxx").replace(/xxxx/g, "xxxx")
-      .replace(/시발/g, "**").replace(/병신/g, "**").replace(/애미/g, "**").replace(/새끼/g, "**").replace(/개년/g, "**").replace(/씨발/g, "**");
-
-          }
-          if (selectedOption === "예의있게") {
-
-            alert("예의있게 선택되었습니다.");
 
 
-            inputSentence = inputSentence.replace(/습니다/g, "다")
-      .replace(/이다/g, "입니다").replace(/궁금합니다/g, "궁금하다").replace(/됩니다/g, "된다").replace(/입니까/g, "인가").replace(/인가요/g, "인가").replace(/합니다/g, "한다")
-      .replace(/겠지요/g, "겠다").replace(/저는 /g, "나는 ").replace(/듭니다/g, "든다").replace(/저의 /g, "나의 ").replace(/저도 /g, "나도 ").replace(/급니다/g, "크다")
-      .replace(/xxxx/g, "xxxx").replace(/xxxx/g, "xxxx").replace(/xxxx/g, "xxxx").replace(/xxxx/g, "xxxx").replace(/xxxx/g, "xxxx").replace(/xxxx/g, "xxxx")
-      .replace(/시발/g, "**").replace(/병신/g, "**").replace(/애미/g, "**").replace(/새끼/g, "**").replace(/개년/g, "**").replace(/씨발/g, "**");
+    var fading = true;
+    var copyButton = document.getElementById("Copyresult");
+
+     copyButton.innerText = "변환 중..";
 
 
-          }
-          if (selectedOption === "친근한 반말") {
 
-            alert("반말이 선택되었습니다.");
-          };
- 
- 
+  function toggleFade() {
+    fading = !fading;
+    if (fading) {
+      fadeLoop();
+    } else {
+      clearInterval(fadeInterval);
+      copyButton.style.opacity = 1;
+    }
+  }
+
+  function fadeLoop() {
+    fadeInterval = setInterval(function () {
+      var currentOpacity = parseFloat(copyButton.style.opacity || 1);
+      copyButton.style.opacity = (currentOpacity === 0.5) ? 1 : 0.5;
+    }, 1000);
+  }
+
   
 
 
+  
+  
 
-        var lines = inputSentence.split("\n");
-        var typingEffect = document.getElementById("typing-effect");
-        typingEffect.innerHTML = "";
-    
-        var currentLine = document.createElement("div");
-    
-        function typeWord(lineIndex, wordIndex) {
-          if (lineIndex < lines.length) {
-            var words = lines[lineIndex].split(" ");
-            if (wordIndex < words.length) {
-              var wordSpan = document.createElement("span");
-              wordSpan.textContent = words[wordIndex];
-              wordSpan.className = "highlight";
-    
-              currentLine.appendChild(wordSpan);
-              typingEffect.appendChild(currentLine);
-    
-              if (typingEffect.scrollWidth > typingEffect.offsetWidth) {
-                currentLine = document.createElement("div");
-                currentLine.appendChild(wordSpan);
-                typingEffect.appendChild(currentLine);
-              }
-    
-              setTimeout(function () {
-                wordSpan.style.backgroundColor = "transparent";
-                typeWord(lineIndex, wordIndex + 1);
-              }, 80);
-            } else {
-              // Move to the next line when all words in the current line are typed
-              currentLine = document.createElement("div");
-              typeWord(lineIndex + 1, 0);
-            }
+
+   // blink(copyButton);
+
+
+          var convertedResult = "";
+      
+          if (selectedOption === "문서체") {
+              convertedResult = inputSentence
+              .replace(/입니다/g, "이다").replace(/집니다/g, "진다").replace(/궁금합니다/g, "궁금하다").replace(/필요한다/g, "필요하다").replace(/유명합니다/g, "유명하다").replace(/됩니다/g, "된다").replace(/입니까/g, "인가").replace(/인가요/g, "인가")
+      .replace(/겠지요/g, "겠다").replace(/저는 /g, "나는 ").replace(/듭니다/g, "든다").replace(/저의 /g, "나의 ").replace(/저도 /g, "나도 ").replace(/큽니다/g, "크다").replace(/둡니다/g, "둔다").replace(/냅니다/g, "낸다")
+
+      .replace(/하겠습니다/g, "한다").replace(/나타냅니다/g, "나타낸다").replace(/가능합니다/g, "가능하다").replace(/일조합니다/g, "일조한다").replace(/기여합니다/g, "기여한다").replace(/돕습니다/g, "돕는다").replace(/다릅니다/g, "다르다").replace(/것인데요/g, "것인데").replace(/있을까요/g, "있을까")
+      .replace(/요합니다/g, "요하다").replace(/보여줍니다/g, "보여준다").replace(/줍니다/g, "준다").replace(/xxxx/g, "xxxx").replace(/xxxx/g, "xxxx")
+
+
+      // 단어변환부분
+      .replace(/저희/g, "우리").replace(/않은데요/g, "않은데").replace(/xxxx/g, "xxxx").replace(/xxxx/g, "xxxx").replace(/xxxx/g, "xxxx").replace(/xxxx/g, "xxxx")
+      .replace(/시발/g, "**").replace(/병신/g, "**").replace(/애미/g, "**").replace(/새끼/g, "**").replace(/개년/g, "**").replace(/씨발/g, "**")
+      .replace(/합니다/g, "한다").replace(/습니다/g, "다")
+
+
+
+
+      // 요자체 변환부분 그나 , 아직안끝남
+      .replace(/있는데요/g, "있는데").replace(/변하는데요/g, "변하는데").replace(/되거든요,/g, "된다").replace(/마찬가지고요/g, "마찬가지").replace(/되었는데요,/g, "되었는데").replace(/xxxx/g, "xxxx").replace(/xxxx/g, "xxxx").replace(/xxxx/g, "xxxx").replace(/xxxx/g, "xxxx").replace(/xxxx/g, "xxxx").replace(/xxxx/g, "xxxx")
+
+      ;
+          } else if (selectedOption === "예의있게") {
+              convertedResult = inputSentence
+                  .replace(/습니다/g, "다")
+                  // Add other replacements as needed
+                  .replace(/xxxx/g, "xxxx");
+          } else if (selectedOption === "친근한 반말") {
+              // Handle the case for "친근한 반말"
           }
-        }
-    
-        typeWord(0, 0);
+      
+          // Display the converted result in the "Converted" textarea with a typing effect
+          displayTypingEffect(convertedResult, "convertedPine");
+
+
+
+
+
+              // Reset the button text after the conversion is complete
+    setTimeout(function () {
+      copyButton.innerText = "Copy";
+    }, convertedResult.split(' ').length * 100); 
+
+
+
       }
+      function displayTypingEffect(text, targetId) {
+    var targetTextarea = document.getElementById(targetId);
+    targetTextarea.value = ""; // Clear the textarea
+    var words = text.split(' ');
+    var index = 0;
+
+
+        // Insert the hello.gif image at the beginning
+        var helloImage = document.createElement("img");
+    helloImage.src = "https://cdn-icons-png.flaticon.com/512/2151/2151415.png";
+    targetTextarea.appendChild(helloImage);
 
 
 
-// startTypingEffect() 함수 호출
-startTypingEffect("Hello, World!", function() {
-    // 타이핑 효과가 완료된 후 실행할 코드
-    alert("타이핑 효과가 완료되었습니다.");
-});
 
+    function type() {
+        if (index < words.length) {
+            targetTextarea.value += words[index] + ' ';
+            index++;
+            var delay = getRandomDelay();
+            setTimeout(type, delay);
+        }
+    }
+
+    function getRandomDelay() {
+        // Adjust the probabilities to have 300 milliseconds with a higher chance every 8 seconds
+        var delays = [60, 60, 60, 50, 70, 80, 100, 77, 90, 200];
+        var probabilities = [0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1];
+
+        // Check if it's been 8 seconds
+        if (index % 8 === 0) {
+            // Increase the probability of 300 milliseconds
+            probabilities[9] = 0.5; // Adjust the probability to your preference
+        } else {
+            // Reset the probability to the original value
+            probabilities[9] = 0.1;
+        }
+
+        // Choose a delay based on probabilities
+        var randomValue = Math.random();
+        var cumulativeProbability = 0;
+
+        for (var i = 0; i < probabilities.length; i++) {
+            cumulativeProbability += probabilities[i];
+            if (randomValue <= cumulativeProbability) {
+                return delays[i];
+            }
+        }
+
+        // Default to the first delay value
+        return delays[0];
+    }
+
+
+
+ 
+
+
+
+
+
+    type();
+}
 
 
       
-    </script>
-    
-
-
-
+      </script>
     
 
 
